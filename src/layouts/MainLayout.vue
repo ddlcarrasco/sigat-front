@@ -9,19 +9,24 @@ const authStore = useAuthStore()
 // Definición del menú lateral
 // soloAdmin: true significa que ese ítem solo aparece habilitado para el rol ADMIN
 const todosLosMenus = [
-    { ruta: '/titulares',     nombre: 'Titulares',       icono: 'pi pi-users'        },
-    { ruta: '/contratos',     nombre: 'Contratos',       icono: 'pi pi-file'         },
-    { ruta: '/recibos',       nombre: 'Recibos',         icono: 'pi pi-receipt'      },
-    { ruta: '/pagos',         nombre: 'Pagos',           icono: 'pi pi-wallet'       },
-    { ruta: '/tramites',      nombre: 'Trámites',        icono: 'pi pi-clipboard'    },
-    { ruta: '/reportes',      nombre: 'Reportes',        icono: 'pi pi-chart-bar'    },
-    { ruta: '/control-acceso',nombre: 'Control de Acceso', icono: 'pi pi-shield', soloAdmin: true },
+    { ruta: '/titulares',      nombre: 'Titulares',         icono: 'pi pi-users'        },
+    { ruta: '/contratos',      nombre: 'Contratos',         icono: 'pi pi-file'         },
+    { ruta: '/recibos',        nombre: 'Recibos',           icono: 'pi pi-receipt'      },
+    { ruta: '/pagos',          nombre: 'Pagos',             icono: 'pi pi-wallet'       },
+    { ruta: '/tramites',       nombre: 'Trámites',          icono: 'pi pi-clipboard'    },
+    { ruta: '/descuentos',     nombre: 'Descuentos',        icono: 'pi pi-tag',         rolesPermitidos: ['ADMIN', 'DIRECTOR'] },
+    { ruta: '/reportes',       nombre: 'Reportes',          icono: 'pi pi-chart-bar'    },
+    { ruta: '/control-acceso', nombre: 'Control de Acceso', icono: 'pi pi-shield',      soloAdmin: true },
 ]
 
 const menus = computed(() =>
     todosLosMenus.map(m => ({
         ...m,
-        permitido: m.soloAdmin ? authStore.esAdmin : true
+        permitido: m.soloAdmin
+            ? authStore.esAdmin
+            : m.rolesPermitidos
+                ? m.rolesPermitidos.includes(authStore.rol)
+                : true
     }))
 )
 

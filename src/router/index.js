@@ -7,6 +7,7 @@ import ContratosView     from '../views/ContratosView.vue'
 import RecibosView       from '../views/RecibosView.vue'
 import PagosView         from '../views/PagosView.vue'
 import TramitesView      from '../views/TramitesView.vue'
+import DescuentosView    from '../views/DescuentosView.vue'
 import ReportesView      from '../views/ReportesView.vue'
 import ControlAccesoView from '../views/ControlAccesoView.vue'
 
@@ -29,6 +30,12 @@ const router = createRouter({
                 { path: 'recibos',        name: 'recibos',        component: RecibosView },
                 { path: 'pagos',          name: 'pagos',          component: PagosView },
                 { path: 'tramites',       name: 'tramites',       component: TramitesView },
+                {
+                    path: 'descuentos',
+                    name: 'descuentos',
+                    component: DescuentosView,
+                    meta: { rolesPermitidos: ['ADMIN', 'DIRECTOR'] }
+                },
                 { path: 'reportes',       name: 'reportes',       component: ReportesView },
                 {
                     // Solo ADMIN puede acceder a control de acceso
@@ -59,6 +66,11 @@ router.beforeEach((to) => {
 
     // Si la ruta es solo para admin y el usuario no lo es
     if (to.meta.soloAdmin && !auth.esAdmin) {
+        return { name: 'titulares' }
+    }
+
+    // Si la ruta tiene roles permitidos y el usuario no está en la lista
+    if (to.meta.rolesPermitidos && !to.meta.rolesPermitidos.includes(auth.rol)) {
         return { name: 'titulares' }
     }
 
