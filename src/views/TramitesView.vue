@@ -144,16 +144,16 @@ async function guardarResolver() {
 
 // ── Inicialización ────────────────────────────────────────────────────────
 onMounted(async () => {
-    const [, con, tip] = await Promise.all([
+    const [, con, tip] = await Promise.allSettled([
         store.cargarTodos(),
         api.get('/contratos'),
         api.get('/tipos-tramite')
     ])
-    contratos.value    = con.data.data.map(c => ({
+    if (con.status === 'fulfilled') contratos.value = con.value.data.data.map(c => ({
         ...c,
         etiqueta: `${c.numeroContrato} — ${c.titularNombre}`
     }))
-    tiposTramite.value = tip.data.data
+    if (tip.status === 'fulfilled') tiposTramite.value = tip.value.data.data
 })
 </script>
 
