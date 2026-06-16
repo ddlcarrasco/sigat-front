@@ -139,6 +139,42 @@ async function guardar() {
     }
 }
 
+// ── Cambiar contraseña ────────────────────────────────────────────────────
+const dialogPassword  = ref(false)
+const nuevaPassword   = ref('')
+const confirmarPassword = ref('')
+const guardandoPass   = ref(false)
+const idUsuarioPass   = ref(null)
+
+function abrirCambioPassword() {
+    idUsuarioPass.value     = form.value.idusuario
+    nuevaPassword.value     = ''
+    confirmarPassword.value = ''
+    dialogPassword.value    = true
+}
+
+async function guardarPassword() {
+    if (nuevaPassword.value.length < 6) {
+        toast.add({ severity: 'warn', summary: 'Contraseña', detail: 'La contraseña debe tener al menos 6 caracteres', life: 3000 })
+        return
+    }
+    if (nuevaPassword.value !== confirmarPassword.value) {
+        toast.add({ severity: 'warn', summary: 'Contraseña', detail: 'Las contraseñas no coinciden', life: 3000 })
+        return
+    }
+    guardandoPass.value = true
+    try {
+        await api.patch(`/usuarios/${idUsuarioPass.value}/password`, { nuevaPassword: nuevaPassword.value })
+        toast.add({ severity: 'success', summary: 'Listo', detail: 'Contraseña actualizada correctamente', life: 3000 })
+        dialogPassword.value = false
+    } catch (e) {
+        console.error(e)
+        toast.add({ severity: 'error', summary: 'Error', detail: e.response?.data?.message || 'No se pudo cambiar la contraseña', life: 5000 })
+    } finally {
+        guardandoPass.value = false
+    }
+}
+
 // ── Desactivar usuario ────────────────────────────────────────────────────
 function confirmarDesactivar(usuario) {
     confirm.require({
@@ -328,10 +364,59 @@ onMounted(async () => {
         <template #footer>
             <Button label="Cancelar" severity="secondary" text @click="dialogForm = false" />
             <Button
+                v-if="modoEdicion"
+                label="Cambiar contraseña"
+                icon="pi pi-lock"
+                severity="secondary"
+                outlined
+                @click="abrirCambioPassword"
+            />
+            <Button
                 :label="modoEdicion ? 'Guardar cambios' : 'Crear usuario'"
                 icon="pi pi-check"
                 :loading="guardando"
                 @click="guardar"
+            />
+        </template>
+    </Dialog>
+
+    <!-- ── Diálogo: Cambiar contraseña ── -->
+    <Dialog
+        v-model:visible="dialogPassword"
+        header="Cambiar contraseña"
+        :style="{ width: '380px' }"
+        modal
+    >
+        <div class="form-grid" style="grid-template-columns: 1fr">
+            <div class="campo">
+                <label>Nueva contraseña <span class="req">*</span></label>
+                <Password
+                    v-model="nuevaPassword"
+                    placeholder="Mínimo 6 caracteres"
+                    :feedback="false"
+                    toggleMask
+                    class="w-full"
+                />
+            </div>
+            <div class="campo">
+                <label>Confirmar contraseña <span class="req">*</span></label>
+                <Password
+                    v-model="confirmarPassword"
+                    placeholder="Repite la contraseña"
+                    :feedback="false"
+                    toggleMask
+                    class="w-full"
+                />
+            </div>
+        </div>
+
+        <template #footer>
+            <Button label="Cancelar" severity="secondary" text @click="dialogPassword = false" />
+            <Button
+                label="Guardar contraseña"
+                icon="pi pi-check"
+                :loading="guardandoPass"
+                @click="guardarPassword"
             />
         </template>
     </Dialog>

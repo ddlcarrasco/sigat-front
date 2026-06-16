@@ -132,10 +132,12 @@ onMounted(async () => {
         api.get('/motivos-recibo'),
         api.get('/estados-recibo')
     ])
-    contratos.value     = con.data.data.map(c => ({
-        ...c,
-        etiqueta: `${c.numeroContrato} — ${c.titularNombre}`
-    }))
+    contratos.value     = con.data.data
+        .filter(c => c.estadoContratoNombre?.toLowerCase() === 'activo')
+        .map(c => ({
+            ...c,
+            etiqueta: `${c.numeroContrato} — ${c.titularNombre}`
+        }))
     motivos.value       = mot.data.data
     estadosRecibo.value = est.data.data
 })

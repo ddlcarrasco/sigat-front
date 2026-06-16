@@ -136,10 +136,12 @@ onMounted(async () => {
         api.get('/contratos')
     ])
     tiposPago.value = tip.data.data
-    contratos.value = con.data.data.map(c => ({
-        ...c,
-        etiqueta: `${c.numeroContrato} — ${c.titularNombre}`
-    }))
+    contratos.value = con.data.data
+        .filter(c => c.estadoContratoNombre?.toLowerCase() === 'activo')
+        .map(c => ({
+            ...c,
+            etiqueta: `${c.numeroContrato} — ${c.titularNombre}`
+        }))
 })
 </script>
 

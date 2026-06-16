@@ -171,7 +171,7 @@ async function guardarEstado() {
 
 // ── Inicialización ────────────────────────────────────────────────────────
 onMounted(async () => {
-    const [, sec, cat, est, tit, usu, tec] = await Promise.all([
+    const [, sec, cat, est, tit, usu, tec] = await Promise.allSettled([
         store.cargarTodos(),
         api.get('/sectores/activos'),
         api.get('/categorias/activas'),
@@ -180,18 +180,18 @@ onMounted(async () => {
         api.get('/usuarios'),
         api.get('/usuarios/por-rol/TECNICO')
     ])
-    sectores.value        = sec.data.data
-    categorias.value      = cat.data.data
-    estadosContrato.value = est.data.data
-    titulares.value       = tit.data.data.map(t => ({
+    if (sec.status === 'fulfilled') sectores.value        = sec.value.data.data
+    if (cat.status === 'fulfilled') categorias.value      = cat.value.data.data
+    if (est.status === 'fulfilled') estadosContrato.value = est.value.data.data
+    if (tit.status === 'fulfilled') titulares.value       = tit.value.data.data.map(t => ({
         ...t,
         nombreCompleto: `${t.nombres} ${t.apellido1} ${t.apellido2 || ''}`.trim()
     }))
-    usuarios.value = usu.data.data.map(u => ({
+    if (usu.status === 'fulfilled') usuarios.value = usu.value.data.data.map(u => ({
         ...u,
         nombreCompleto: `${u.nombres} ${u.apellidoPaterno}`
     }))
-    tecnicos.value = tec.data.data.map(u => ({
+    if (tec.status === 'fulfilled') tecnicos.value = tec.value.data.data.map(u => ({
         ...u,
         nombreCompleto: `${u.nombres} ${u.apellidoPaterno}`
     }))
@@ -393,7 +393,7 @@ onMounted(async () => {
                 <label>Nuevo estado <span class="req">*</span></label>
                 <Select
                     v-model="formEstado.idEstadoNuevo"
-                    :options="estadosContrato"
+                    :options="estadosContrato.filter(e => e.nombre.toLowerCase() !== 'activo')"
                     optionLabel="nombre"
                     optionValue="idestado_contrato"
                     placeholder="Selecciona el nuevo estado..."
