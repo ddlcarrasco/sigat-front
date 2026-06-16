@@ -3,12 +3,12 @@ import api from '../api/axios'
 
 // Store de autenticación
 // Guarda el token y los datos del usuario logueado
-// Los persiste en localStorage para que sobrevivan al recargar la página
+// Los persiste en sessionStorage para que sobrevivan al recargar la página
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        token:    localStorage.getItem('token') || null,
-        username: localStorage.getItem('username') || null,
-        rol:      localStorage.getItem('rol') || null
+        token:    sessionStorage.getItem('token') || null,
+        username: sessionStorage.getItem('username') || null,
+        rol:      sessionStorage.getItem('rol') || null
     }),
 
     getters: {
@@ -28,18 +28,18 @@ export const useAuthStore = defineStore('auth', {
             this.username = data.username
             this.rol      = data.rol
 
-            localStorage.setItem('token',    data.token)
-            localStorage.setItem('username', data.username)
-            localStorage.setItem('rol',      data.rol)
+            sessionStorage.setItem('token',    data.token)
+            sessionStorage.setItem('username', data.username)
+            sessionStorage.setItem('rol',      data.rol)
         },
 
         logout() {
             this.token    = null
             this.username = null
             this.rol      = null
-            localStorage.removeItem('token')
-            localStorage.removeItem('username')
-            localStorage.removeItem('rol')
+            sessionStorage.removeItem('token')
+            sessionStorage.removeItem('username')
+            sessionStorage.removeItem('rol')
         }
     }
 })

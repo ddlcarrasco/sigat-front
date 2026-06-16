@@ -10,7 +10,7 @@ const api = axios.create({
 // Toma el token guardado y lo pone en el header Authorization
 // El backend de SIGAT requiere "Bearer <token>" para rutas protegidas
 api.interceptors.request.use(config => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     if (token) {
         config.headers.Authorization = `Bearer ${token}`
     }
