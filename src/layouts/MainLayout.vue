@@ -16,6 +16,7 @@ const todosLosMenus = [
     { ruta: '/tramites',       nombre: 'Trámites',          icono: 'pi pi-clipboard'    },
     { ruta: '/descuentos',     nombre: 'Descuentos',        icono: 'pi pi-tag',         rolesPermitidos: ['ADMIN', 'DIRECTOR'] },
     { ruta: '/reportes',       nombre: 'Reportes',          icono: 'pi pi-chart-bar'    },
+    { ruta: '/catalogos',      nombre: 'Catálogos',         icono: 'pi pi-book',        rolesPermitidos: ['ADMIN', 'DIRECTOR'] },
     { ruta: '/control-acceso', nombre: 'Control de Acceso', icono: 'pi pi-shield',      soloAdmin: true },
 ]
 

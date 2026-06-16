@@ -8,6 +8,7 @@ import RecibosView       from '../views/RecibosView.vue'
 import PagosView         from '../views/PagosView.vue'
 import TramitesView      from '../views/TramitesView.vue'
 import DescuentosView    from '../views/DescuentosView.vue'
+import CatalogosView     from '../views/CatalogosView.vue'
 import ReportesView      from '../views/ReportesView.vue'
 import ControlAccesoView from '../views/ControlAccesoView.vue'
 
@@ -37,6 +38,12 @@ const router = createRouter({
                     meta: { rolesPermitidos: ['ADMIN', 'DIRECTOR'] }
                 },
                 { path: 'reportes',       name: 'reportes',       component: ReportesView },
+                {
+                    path: 'catalogos',
+                    name: 'catalogos',
+                    component: CatalogosView,
+                    meta: { rolesPermitidos: ['ADMIN', 'DIRECTOR'] }
+                },
                 {
                     // Solo ADMIN puede acceder a control de acceso
                     path: 'control-acceso',
