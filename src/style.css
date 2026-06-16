@@ -1,0 +1,398 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #374151;
+    background-color: #f0f2f5;
+}
+
+/* ── Layout card principal ── */
+.pagina-card {
+    background: white;
+    border: 0.5px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.pagina-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.5rem;
+    border-bottom: 0.5px solid #f1f5f9;
+}
+
+.pagina-card-titulo {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1a5276;
+}
+
+/* Barra de chips de filtro */
+.filtros-barra {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 0.5px solid #f1f5f9;
+}
+
+.filtros-label {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    font-weight: 500;
+    white-space: nowrap;
+    margin-right: 0.25rem;
+}
+
+.btn-limpiar {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 0.8rem;
+    color: #9ca3af;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    transition: color 0.15s;
+}
+
+.btn-limpiar:hover {
+    color: #6b7280;
+}
+
+/* ── Dialog ── */
+.p-dialog {
+    border: 0.5px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10) !important;
+    overflow: hidden;
+}
+
+.p-dialog .p-dialog-header {
+    background: white !important;
+    padding: 1.1rem 1.5rem !important;
+    border-bottom: 0.5px solid #f1f5f9 !important;
+}
+
+.p-dialog .p-dialog-title {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+
+.p-dialog .p-dialog-header-action {
+    color: #9ca3af !important;
+}
+
+.p-dialog .p-dialog-header-action:hover {
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+}
+
+.p-dialog .p-dialog-content {
+    background: white !important;
+    padding: 1.25rem 1.5rem !important;
+    color: #374151 !important;
+}
+
+.p-dialog .p-dialog-footer {
+    background: white !important;
+    padding: 0.75rem 1.5rem !important;
+    border-top: 0.5px solid #f1f5f9 !important;
+}
+
+/* ── DatePicker panel ── */
+.p-datepicker-panel {
+    background: white !important;
+    border: 0.5px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10) !important;
+    color: #374151 !important;
+}
+
+.p-datepicker-header {
+    background: white !important;
+    border-bottom: 0.5px solid #f1f5f9 !important;
+    padding: 0.5rem 0.75rem !important;
+    color: #374151 !important;
+}
+
+.p-datepicker-prev-button,
+.p-datepicker-next-button {
+    color: #6b7280 !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.p-datepicker-prev-button:hover,
+.p-datepicker-next-button:hover {
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+}
+
+.p-datepicker-title {
+    color: #374151 !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+}
+
+.p-datepicker-select-month,
+.p-datepicker-select-year {
+    color: #374151 !important;
+    background: transparent !important;
+    border: none !important;
+    font-weight: 600 !important;
+}
+
+.p-datepicker-select-month:hover,
+.p-datepicker-select-year:hover {
+    background: #f3f4f6 !important;
+    border-radius: 4px !important;
+}
+
+.p-datepicker-weekday {
+    color: #9ca3af !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+}
+
+.p-datepicker-day-cell {
+    padding: 1px !important;
+}
+
+.p-datepicker-day {
+    color: #374151 !important;
+    border-radius: 6px !important;
+    font-size: 0.875rem !important;
+}
+
+.p-datepicker-day:hover {
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+}
+
+.p-datepicker-day.p-datepicker-day-selected {
+    background: #1a5276 !important;
+    color: white !important;
+}
+
+.p-datepicker-day.p-datepicker-today > .p-datepicker-day {
+    background: #d6eaf8 !important;
+    color: #1a5276 !important;
+    font-weight: 600 !important;
+}
+
+.p-datepicker-other-month .p-datepicker-day {
+    color: #d1d5db !important;
+}
+
+.p-datepicker-month-view {
+    background: white !important;
+}
+
+.p-datepicker-month {
+    background: transparent !important;
+    color: #374151 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-size: 0.875rem !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.p-datepicker-month:hover {
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+}
+
+.p-datepicker-month.p-datepicker-month-selected {
+    background: #1a5276 !important;
+    color: white !important;
+}
+
+.p-datepicker-year-view {
+    background: white !important;
+}
+
+.p-datepicker-year {
+    background: transparent !important;
+    color: #374151 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-size: 0.875rem !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.p-datepicker-year:hover {
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+}
+
+.p-datepicker-year.p-datepicker-year-selected {
+    background: #1a5276 !important;
+    color: white !important;
+}
+
+/* ── Inputs, Select, DatePicker ── */
+
+.p-select,
+.p-datepicker,
+.p-inputtext,
+.p-textarea,
+.p-inputnumber-input {
+    background-color: #ffffff !important;
+    color: #374151 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+.p-select:hover,
+.p-datepicker:hover {
+    border-color: #9ca3af !important;
+}
+
+.p-select-label {
+    color: #374151 !important;
+}
+
+.p-select-label.p-placeholder,
+.p-datepicker input::placeholder {
+    color: #9ca3af !important;
+}
+
+.p-select-overlay,
+.p-datepicker-panel {
+    background-color: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+.p-select-option {
+    color: #374151 !important;
+}
+
+.p-select-option:hover,
+.p-select-option.p-focus {
+    background-color: #ebf5fb !important;
+    color: #1a5276 !important;
+}
+
+.p-select-option.p-selected {
+    background-color: #d6eaf8 !important;
+    color: #1a5276 !important;
+}
+
+/* ── DataTable ── */
+
+.p-datatable {
+    background: white;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+    background-color: #f9fafb !important;
+    color: #9ca3af !important;
+    font-weight: 600 !important;
+    font-size: 0.72rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.07em !important;
+    border-bottom: 0.5px solid #e5e7eb !important;
+    padding: 0.7rem 1rem !important;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+    background-color: #ffffff !important;
+    color: #374151 !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:nth-child(even) {
+    background-color: #fafafa !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+    background-color: #ebf5fb !important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+    border-bottom: 0.5px solid #f1f5f9 !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.875rem !important;
+}
+
+.p-paginator {
+    background-color: #f9fafb !important;
+    border-top: 0.5px solid #e5e7eb !important;
+    padding: 0.5rem 1rem !important;
+}
+
+/* ── Tags de estado de contrato ── */
+.tag-activo {
+    background-color: #dcfce7;
+    color: #15803d;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+.tag-suspendido {
+    background-color: #fef9c3;
+    color: #a16207;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+.tag-cancelado {
+    background-color: #fee2e2;
+    color: #991b1b;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+.tag-pendiente {
+    background-color: #dbeafe;
+    color: #1e40af;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+.tag-pagado {
+    background-color: #dcfce7;
+    color: #166534;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+.tag-vencido {
+    background-color: #ffedd5;
+    color: #c2410c;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+.tag-cerrado {
+    background-color: #f1f5f9;
+    color: #64748b;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
