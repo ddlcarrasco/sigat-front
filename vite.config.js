@@ -17,5 +17,8 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['chart.js', 'chart.js/auto']
+  },
+  server: {
+    host: true   // escucha en todas las interfaces (0.0.0.0), no solo localhost
   }
 })

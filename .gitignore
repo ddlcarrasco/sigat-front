@@ -30,3 +30,7 @@ coverage
 
 # Vite
 *.timestamp-*-*.mjs
+
+# Variables de entorno locales (contienen IPs/URLs del entorno)
+.env
+.env.local
