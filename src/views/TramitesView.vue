@@ -193,6 +193,8 @@ onMounted(async () => {
 
             <Column field="idtramite"        header="ID"        style="width: 70px" />
             <Column field="contratoNumero"   header="Contrato"  style="width: 130px" />
+            <Column field="titularNombre"    header="Titular"   style="width: 180px" />
+            <Column field="domicilioToma"    header="Domicilio" style="width: 180px" />
             <Column field="tipoTramiteNombre" header="Tipo" />
             <Column field="usuarioSolicitanteNombre" header="Solicitó" style="width: 160px" />
 
