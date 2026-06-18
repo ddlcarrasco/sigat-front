@@ -31,6 +31,7 @@ import TabPanels from 'primevue/tabpanels'
 import TabPanel from 'primevue/tabpanel'
 import MultiSelect from 'primevue/multiselect'
 import ToggleSwitch from 'primevue/toggleswitch'
+import Chart from 'primevue/chart'
 
 import App from './App.vue'
 import router from './router'
@@ -69,6 +70,7 @@ app.component('TabPanels', TabPanels)
 app.component('TabPanel', TabPanel)
 app.component('MultiSelect', MultiSelect)
 app.component('ToggleSwitch', ToggleSwitch)
+app.component('Chart', Chart)
 app.directive('tooltip', Tooltip)
 
 app.mount('#app')

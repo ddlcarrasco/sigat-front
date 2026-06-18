@@ -12,7 +12,6 @@ const sectores        = ref([])
 const categorias      = ref([])
 const estadosContrato = ref([])
 const titulares       = ref([])
-const usuarios        = ref([])       // todos los usuarios (para responsable de cambio de estado)
 const tecnicos        = ref([])       // solo usuarios con rol TECNICO (para instalador)
 
 // ── Filtro de texto (lado cliente) ───────────────────────────────────────
@@ -47,9 +46,10 @@ const guardando    = ref(false)
 // El ID del estado "Nuevo contrato" se detecta automáticamente al cargar catálogos
 const idEstadoNuevo = ref(null)
 
+const numeroContratoProximo = ref('')   // folio generado automáticamente
+
 const formVacio = () => ({
     idcontrato:          null,
-    numeroContrato:      '',
     numeroCatastro:      '',
     domicilioToma:       '',
     fechaInstalacion:    null,
@@ -63,18 +63,24 @@ const formVacio = () => ({
 
 const form = ref(formVacio())
 
-function abrirNuevo() {
+async function abrirNuevo() {
     form.value = formVacio()
-    // Estado inicial fijo: "Nuevo contrato"
     form.value.estadoContratoId = idEstadoNuevo.value
     modoEdicion.value  = false
-    dialogForm.value   = true
+    numeroContratoProximo.value = ''
+    try {
+        const res = await api.get('/contratos/siguiente-numero')
+        numeroContratoProximo.value = res.data.data
+    } catch {
+        numeroContratoProximo.value = '—'
+    }
+    dialogForm.value = true
 }
 
 function abrirEdicion(contrato) {
+    numeroContratoProximo.value = contrato.numeroContrato || ''
     form.value = {
         idcontrato:          contrato.idcontrato,
-        numeroContrato:      contrato.numeroContrato      || '',
         numeroCatastro:      contrato.numeroCatastro      || '',
         domicilioToma:       contrato.domicilioToma       || '',
         fechaInstalacion:    null,   // no se edita
@@ -98,7 +104,6 @@ async function guardar() {
     guardando.value = true
     try {
         const dto = {
-            numeroContrato:      form.value.numeroContrato,
             numeroCatastro:      form.value.numeroCatastro,
             domicilioToma:       form.value.domicilioToma,
             observaciones:       form.value.observaciones,
@@ -136,24 +141,19 @@ const contratoSeleccionado = ref(null)
 const cambiando            = ref(false)
 
 const formEstado = ref({
-    idEstadoNuevo:        null,
-    observaciones:        '',
-    idUsuarioResponsable: null
+    idEstadoNuevo: null,
+    observaciones: ''
 })
 
 function abrirCambioEstado(contrato) {
     contratoSeleccionado.value = contrato
-    formEstado.value = { idEstadoNuevo: null, observaciones: '', idUsuarioResponsable: null }
+    formEstado.value = { idEstadoNuevo: null, observaciones: '' }
     dialogEstado.value = true
 }
 
 async function guardarEstado() {
     if (!formEstado.value.idEstadoNuevo) {
         toast.add({ severity: 'warn', summary: 'Requerido', detail: 'Selecciona el nuevo estado', life: 3000 })
-        return
-    }
-    if (!formEstado.value.idUsuarioResponsable) {
-        toast.add({ severity: 'warn', summary: 'Requerido', detail: 'Selecciona el usuario responsable', life: 3000 })
         return
     }
 
@@ -171,13 +171,12 @@ async function guardarEstado() {
 
 // ── Inicialización ────────────────────────────────────────────────────────
 onMounted(async () => {
-    const [, sec, cat, est, tit, usu, tec] = await Promise.allSettled([
+    const [, sec, cat, est, tit, tec] = await Promise.allSettled([
         store.cargarTodos(),
         api.get('/sectores/activos'),
         api.get('/categorias/activas'),
         api.get('/estados-contrato'),
         api.get('/titulares'),
-        api.get('/usuarios'),
         api.get('/usuarios/por-rol/TECNICO')
     ])
     if (sec.status === 'fulfilled') sectores.value        = sec.value.data.data
@@ -186,10 +185,6 @@ onMounted(async () => {
     if (tit.status === 'fulfilled') titulares.value       = tit.value.data.data.map(t => ({
         ...t,
         nombreCompleto: `${t.nombres} ${t.apellido1} ${t.apellido2 || ''}`.trim()
-    }))
-    if (usu.status === 'fulfilled') usuarios.value = usu.value.data.data.map(u => ({
-        ...u,
-        nombreCompleto: `${u.nombres} ${u.apellidoPaterno}`
     }))
     if (tec.status === 'fulfilled') tecnicos.value = tec.value.data.data.map(u => ({
         ...u,
@@ -286,7 +281,7 @@ onMounted(async () => {
 
             <div class="campo">
                 <label>Número de contrato</label>
-                <InputText v-model="form.numeroContrato" placeholder="Ej. C-0001" class="w-full" />
+                <div class="folio-display">{{ numeroContratoProximo || '…' }}</div>
             </div>
 
             <div class="campo">
@@ -402,19 +397,6 @@ onMounted(async () => {
             </div>
 
             <div class="campo campo--full">
-                <label>Usuario responsable <span class="req">*</span></label>
-                <Select
-                    v-model="formEstado.idUsuarioResponsable"
-                    :options="usuarios"
-                    optionLabel="nombreCompleto"
-                    optionValue="idusuario"
-                    placeholder="Selecciona el usuario..."
-                    filter
-                    class="w-full"
-                />
-            </div>
-
-            <div class="campo campo--full">
                 <label>Observaciones</label>
                 <Textarea v-model="formEstado.observaciones" rows="3" placeholder="Motivo del cambio..." class="w-full" />
             </div>
@@ -465,6 +447,17 @@ onMounted(async () => {
 }
 
 .req { color: #dc2626; }
+
+.folio-display {
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1a5276;
+    letter-spacing: 0.05em;
+}
 
 .info-contrato {
     display: grid;

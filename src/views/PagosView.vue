@@ -50,7 +50,6 @@ const cargandoRecibos = ref(false)
 
 // Paso 2 — datos del pago
 const form = ref({
-    folio:         '',
     montoRecibido: null,
     tipoPagoId:    null,
     observaciones: ''
@@ -85,17 +84,13 @@ function abrirDialog() {
     contratoSelId.value        = null
     recibosPendientes.value    = []
     recibosSeleccionados.value = []
-    form.value = { folio: '', montoRecibido: null, tipoPagoId: null, observaciones: '' }
+    form.value = { montoRecibido: null, tipoPagoId: null, observaciones: '' }
     dialogPago.value = true
 }
 
 async function registrar() {
     if (recibosSeleccionados.value.length === 0) {
         toast.add({ severity: 'warn', summary: 'Sin recibos', detail: 'Selecciona al menos un recibo a liquidar', life: 3000 })
-        return
-    }
-    if (!form.value.folio.trim()) {
-        toast.add({ severity: 'warn', summary: 'Requerido', detail: 'El folio es obligatorio', life: 3000 })
         return
     }
     if (!form.value.tipoPagoId) {
@@ -110,7 +105,6 @@ async function registrar() {
     registrando.value = true
     try {
         const dto = {
-            folio:         form.value.folio.toUpperCase(),
             montoRecibido: form.value.montoRecibido,
             tipoPagoId:    form.value.tipoPagoId,
             observaciones: form.value.observaciones,
@@ -266,16 +260,6 @@ onMounted(async () => {
         </div>
 
         <div class="form-grid">
-
-            <div class="campo">
-                <label>Folio <span class="req">*</span></label>
-                <InputText
-                    v-model="form.folio"
-                    placeholder="Ej. REC-00123"
-                    class="w-full"
-                    style="text-transform: uppercase"
-                />
-            </div>
 
             <div class="campo">
                 <label>Tipo de pago <span class="req">*</span></label>
