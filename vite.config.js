@@ -19,6 +19,12 @@ export default defineConfig({
     include: ['chart.js', 'chart.js/auto']
   },
   server: {
-    host: true   // escucha en todas las interfaces (0.0.0.0), no solo localhost
+    host: true,  // escucha en todas las interfaces (0.0.0.0), no solo localhost
+    proxy: {
+      '/sigat': {
+        target: 'http://localhost:8081',
+        changeOrigin: true
+      }
+    }
   }
 })
