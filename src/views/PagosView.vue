@@ -77,8 +77,86 @@ watch(recibosSeleccionados, (sel) => {
     form.value.montoRecibido = total > 0 ? total : null
 }, { deep: true })
 
-const mesesNombres = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+const mesesNombres = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+
+const mesesCortos  = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
                           'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+
+// ── Impresión de ticket térmico ───────────────────────────────────────────
+async function imprimirPago(pago) {
+    try {
+        const res = await api.get(`/pagos/${pago.idpago}/detalle`)
+        const d = res.data.data
+
+        const mxn = (v) => v != null
+            ? new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(v)
+            : '$0.00'
+
+        const fecha = d.fechaPago
+            ? new Date(d.fechaPago).toLocaleString('es-MX', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+              })
+            : '—'
+
+        const r0 = d.recibos?.[0] || {}
+
+        const filasRecibos = (d.recibos || []).map(r =>
+            `<div class="row">
+                <span>${mesesNombres[r.mes]} ${r.anio}</span>
+                <span>${mxn(r.monto)}</span>
+            </div>`
+        ).join('')
+
+        const obsLinea = d.observaciones
+            ? `<div><b>Obs:</b> ${d.observaciones}</div>`
+            : ''
+
+        const html = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:72mm;font-family:'Courier New',Courier,monospace;font-size:11px;padding:4mm 3mm}
+  .c{text-align:center}
+  .b{font-weight:bold}
+  .line{border-top:1px dashed #000;margin:4px 0}
+  .row{display:flex;justify-content:space-between;margin:2px 0}
+  @media print{@page{margin:0;size:80mm auto}body{width:72mm}}
+</style></head>
+<body>
+  <div class="c b" style="font-size:14px">AGUA POTABLE</div>
+  <div class="c b">MUNICIPIO DE ${(d.municipioNombre || '').toUpperCase()}</div>
+  <div class="c">RECIBO DE PAGO</div>
+  <div class="line"></div>
+  <div><b>Folio:</b> ${d.folio || '—'}</div>
+  <div><b>Fecha:</b> ${fecha}</div>
+  <div class="line"></div>
+  <div><b>Contrato:</b> ${r0.numeroContrato || '—'}</div>
+  <div><b>Titular:</b> ${(r0.titularNombre || '—').toUpperCase()}</div>
+  <div><b>Domicilio:</b> ${r0.domicilioToma || '—'}</div>
+  <div class="line"></div>
+  <div class="row b"><span>PERÍODO</span><span>MONTO</span></div>
+  <div class="line"></div>
+  ${filasRecibos}
+  <div class="line"></div>
+  <div class="row b" style="font-size:13px"><span>TOTAL PAGADO</span><span>${mxn(d.montoRecibido)}</span></div>
+  <div class="line"></div>
+  <div><b>Tipo de pago:</b> ${d.tipoPagoNombre || '—'}</div>
+  <div><b>Atendió:</b> ${d.usuarioNombre || '—'}</div>
+  ${obsLinea}
+  <div class="line"></div>
+  <div class="c" style="margin-top:4px">Gracias por su pago puntual</div>
+</body></html>`
+
+        const v = window.open('', '_blank', 'width=360,height=620')
+        v.document.write(html)
+        v.document.close()
+        setTimeout(() => { v.print(); v.close() }, 500)
+    } catch (e) {
+        console.error('Error al imprimir pago:', e)
+        toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar el detalle del pago', life: 4000 })
+    }
+}
 
 function abrirDialog() {
     contratoSelId.value        = null
@@ -191,6 +269,17 @@ onMounted(async () => {
             </Column>
 
             <Column field="observaciones" header="Observaciones" />
+
+            <Column header="" style="width: 60px; text-align: center">
+                <template #body="{ data }">
+                    <Button
+                        icon="pi pi-print"
+                        severity="secondary" text rounded size="small"
+                        v-tooltip="'Imprimir recibo'"
+                        @click="imprimirPago(data)"
+                    />
+                </template>
+            </Column>
         </DataTable>
     </div>
 
@@ -233,7 +322,7 @@ onMounted(async () => {
                 <Column field="idrecibo" header="ID"      style="width: 60px" />
                 <Column header="Período" style="width: 120px">
                     <template #body="{ data }">
-                        {{ mesesNombres[data.mes] }} {{ data.anio }}
+                        {{ mesesCortos[data.mes] }} {{ data.anio }}
                     </template>
                 </Column>
                 <Column header="Monto" style="width: 110px; text-align: right">
